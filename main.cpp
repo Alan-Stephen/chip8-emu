@@ -1,0 +1,30 @@
+#include <iostream>
+#include "SDL.h"
+#include "AddressRegister.h"
+#include "Display.h"
+#include "Input.h"
+
+int main() {
+    char memory[4096];
+    char V[16];
+    AddressRegister address_register;
+    char stack[4096];
+
+    int delay_timer = 0;
+    int sound_timer = 0;
+
+    Input input;
+    Display display;
+
+    std::cout << "Hello, World!" << std::endl;
+
+    SDL_Event event;
+    while (true) {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT ||
+                (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
+                return 0;
+            }
+        }
+    }
+}
