@@ -6,12 +6,13 @@
 #define UNTITLED_DISPLAY_H
 
 #include "SDL.h"
+#include <iostream>
 
 class Display {
 private:
-    static const int DISPLAY_WIDTH = 64;
-    static const int DISPLAY_HEIGHT = 32;
-    static const int SCALE = 10;
+    static constexpr int DISPLAY_WIDTH = 64;
+    static constexpr int DISPLAY_HEIGHT = 32;
+    static constexpr int SCALE = 10;
 
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -23,6 +24,18 @@ public:
         window = SDL_CreateWindow("CHIP-8", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                                   DISPLAY_WIDTH * SCALE, DISPLAY_HEIGHT * SCALE, SDL_WINDOW_SHOWN);
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+        if (!window) {
+            std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << "\n";
+            return;
+        }
+
+        if (!renderer) {
+            std::cerr << "Renderer could not be created! SDL_Error: " << SDL_GetError() << "\n";
+            return;
+        }
+
+        std::cout << "Display Successfully initialized\n";
     }
 
     ~Display() {
@@ -31,6 +44,5 @@ public:
         SDL_Quit();
     }
 };
-
 
 #endif //UNTITLED_DISPLAY_H

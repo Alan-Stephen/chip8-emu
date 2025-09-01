@@ -25,6 +25,10 @@ int main() {
                 (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
                 return 0;
             }
+            if (event.type == SDL_KEYDOWN) {
+                printf("Key pressed: %s\n", SDL_GetKeyName(event.key.keysym.sym));
+            }
         }
+        SDL_Delay(16);
     }
 }

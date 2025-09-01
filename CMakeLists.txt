@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(SDL2 REQUIRED)
 
-add_executable(app main.cpp
+add_executable(app
         main.cpp
         AddressRegister.cpp
         AddressRegister.h
