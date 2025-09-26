@@ -43,6 +43,8 @@ public:
         SDL_DestroyWindow(window);
         SDL_Quit();
     }
+
+    void setPixel(int x, int y, bool on);
 };
 
 #endif //UNTITLED_DISPLAY_H

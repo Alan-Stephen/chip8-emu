@@ -3,7 +3,7 @@ project(untitled)
 
 set(CMAKE_CXX_STANDARD 20)
 
-find_package(SDL2 REQUIRED)
+find_package(SDL2 REQUIRED CONFIG)
 
 add_executable(app
         main.cpp
@@ -16,4 +16,4 @@ add_executable(app
 
 target_include_directories(app PRIVATE ${SDL2_INCLUDE_DIRS})
 
-target_link_libraries(app PRIVATE ${SDL2_LIBRARIES})
+target_link_libraries(app PRIVATE SDL2::SDL2)

@@ -16,6 +16,14 @@ int main() {
     Input input;
     Display display;
 
+    for (int y = 0; y < 32; ++y) {
+        for (int x = 0; x < 64; ++x) {
+            // turn on every other pixel in a classic checker pattern
+            bool on = ((x + y) % 2 == 0);
+            display.setPixel(x, y, on);
+        }
+    }
+
     std::cout << "Hello, World!" << std::endl;
 
     SDL_Event event;
