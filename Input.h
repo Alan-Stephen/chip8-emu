@@ -6,23 +6,17 @@
 #define UNTITLED_INPUT_H
 #include <cstdint>
 
+namespace chip8 {
 
 class Input {
-private:
     uint16_t keys = 0;
 
 public:
-    void setKeyPressed(uint8_t key) {
-        keys |= (1 << key);
-    }
-
-    void setKeyReleased(uint8_t key) {
-        keys &= ~(1 << key);
-    }
-
-    bool isKeyPressed(uint8_t key) const {
-        return keys & (1 << key);
-    }
+    void setKeyPressed(uint8_t key);
+    void setKeyReleased(uint8_t key);
+    bool isKeyPressed(uint8_t key) const;
 };
+
+} // namespace chip8
 
 #endif //UNTITLED_INPUT_H

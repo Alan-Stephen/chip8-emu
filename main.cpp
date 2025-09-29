@@ -40,8 +40,8 @@ int main() {
         memory[0x050 + i] = fonts[i];
     }
 
-    Input input;
-    Display display;
+    chip8::Input input;
+    chip8::Display display;
 
     for (int y = 0; y < 32; ++y) {
         for (int x = 0; x < 64; ++x) {

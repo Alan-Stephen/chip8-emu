@@ -8,6 +8,8 @@
 #include "SDL.h"
 #include <iostream>
 
+namespace chip8 {
+
 class Display {
 private:
     static constexpr int DISPLAY_WIDTH = 64;
@@ -48,5 +50,7 @@ public:
 
     void render() const;
 };
+
+} // namespace chip8
 
 #endif //UNTITLED_DISPLAY_H

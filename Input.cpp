@@ -3,3 +3,19 @@
 //
 
 #include "Input.h"
+
+namespace chip8 {
+
+void Input::setKeyPressed(uint8_t key) {
+    keys |= (1 << key);
+}
+
+void Input::setKeyReleased(uint8_t key) {
+    keys &= ~(1 << key);
+}
+
+bool Input::isKeyPressed(uint8_t key) const {
+    return keys & (1 << key);
+}
+
+} // namespace chip8

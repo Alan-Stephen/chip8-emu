@@ -4,7 +4,7 @@
 
 #include "Display.h"
 
-void Display::setPixel(const int x, const int y, const bool on) {
+void chip8::Display::setPixel(const int x, const int y, const bool on) {
     // bounds check
     if (x < 0 || x >= DISPLAY_WIDTH || y < 0 || y >= DISPLAY_HEIGHT) {
         throw std::out_of_range("Pixel out of bounds");
@@ -27,6 +27,6 @@ void Display::setPixel(const int x, const int y, const bool on) {
     SDL_RenderFillRect(renderer, &r);
 }
 
-void Display::render() const {
+void chip8::Display::render() const {
     SDL_RenderPresent(renderer);
 }
