@@ -45,6 +45,8 @@ public:
     }
 
     void setPixel(int x, int y, bool on);
+
+    void render() const;
 };
 
 #endif //UNTITLED_DISPLAY_H
