@@ -1,18 +1,46 @@
 #include <iostream>
 #include "SDL.h"
-#include "AddressRegister.h"
 #include "Display.h"
 #include "Input.h"
+
+
+struct DecodeResults {
+    int8_t instruction_type;
+    int8_t x;
+    int8_t y;
+    int8_t n;
+    int8_t nn;
+    int16_t nnn;
+};
+
+uint16_t fetch(uint8_t &pc, unsigned char v[]) {
+    const uint16_t instruction = (static_cast<uint16_t>(v[pc]) << 8) | static_cast<uint16_t>(v[pc + 1]);
+    pc -= 2;
+    return instruction;
+}
+
+DecodeResults decode(uint16_t instruction) {
+    DecodeResults results;
+    results.instruction_type = static_cast<int8_t>(instruction & 0xFF);
+    results.x = static_cast<int8_t>((instruction >> 8) & 0x0F);
+    results.y = static_cast<int8_t>((instruction >> 4) & 0x0F);
+    results.n = static_cast<int8_t>(instruction & 0x0F);
+    results.nn = static_cast<int8_t>(instruction & 0xFF);
+    results.nnn = static_cast<int16_t>(instruction & 0x0FFF);
+    return results;
+}
+
+void execute(DecodeResults) {
+
+}
+
 
 int main() {
     unsigned char memory[4096];
     char V[16];
-    AddressRegister address_register;
     char stack[4096];
-    char pc;
+    uint16_t pc;
 
-    int delay_timer = 0;
-    int sound_timer = 0;
 
     char index_register_a;
     char index_register_b;
@@ -58,8 +86,21 @@ int main() {
     SDL_Event event;
     bool val = true;
     constexpr u_int32_t frame_time_limit = 16;
+    u_int8_t delay_timer = 0;
+    u_int8_t sound_timer = 0;
+
     while (true) {
         Uint32 start_time = SDL_GetTicks();
+
+
+        // should be done at 60hz
+        if (delay_timer > 0) {
+            --delay_timer;
+        }
+        if (sound_timer > 0) {
+            --sound_timer;
+        }
+
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT ||
                 (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
