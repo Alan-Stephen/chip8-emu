@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <iostream>
 #include "SDL.h"
 #include "Display.h"
@@ -5,12 +6,13 @@
 
 
 struct DecodeResults {
-    int8_t instruction_type;
-    int8_t x;
-    int8_t y;
-    int8_t n;
-    int8_t nn;
-    int16_t nnn;
+    uint16_t instruction;
+    uint8_t instruction_type;
+    uint8_t x;
+    uint8_t y;
+    uint8_t n;
+    uint8_t nn;
+    uint16_t nnn;
 };
 
 uint16_t fetch(uint8_t &pc, unsigned char v[]) {
@@ -22,28 +24,190 @@ uint16_t fetch(uint8_t &pc, unsigned char v[]) {
 DecodeResults decode(uint16_t instruction) {
     DecodeResults results;
     results.instruction_type = static_cast<int8_t>(instruction & 0xFF);
-    results.x = static_cast<int8_t>((instruction >> 8) & 0x0F);
-    results.y = static_cast<int8_t>((instruction >> 4) & 0x0F);
-    results.n = static_cast<int8_t>(instruction & 0x0F);
-    results.nn = static_cast<int8_t>(instruction & 0xFF);
-    results.nnn = static_cast<int16_t>(instruction & 0x0FFF);
+    results.x = static_cast<uint8_t>((instruction >> 8) & 0x0F);
+    results.y = static_cast<uint8_t>((instruction >> 4) & 0x0F);
+    results.n = static_cast<uint8_t>(instruction & 0x0F);
+    results.nn = static_cast<uint8_t>(instruction & 0xFF);
+    results.nnn = static_cast<uint16_t>(instruction & 0x0FFF);
+    results.instruction = instruction;
     return results;
 }
 
-void execute(DecodeResults) {
+void execute(DecodeResults results, chip8::Display display, uint16_t &pc, uint8_t v[], uint16_t I) {
+    switch (results.instruction_type) {
+        case 0x0: {
+            // Special opcodes starting with 0
+            if (results.instruction == 0x00E0) {
+                display.clear();
+            } else if (results.instruction == 0x00EE) {
+                // 00EE - RET: Return from subroutine
+                // TODO: Return implementation
+            } else {
+                // 0NNN - SYS addr: Jump to machine code routine (usually ignored)
+                // TODO: System call or ignore
+            }
+            break;
+        }
 
+        case 0x1: {
+            // 1NNN - JP addr: Jump to location NNN
+            pc = results.nnn;
+            break;
+        }
+
+        case 0x2: {
+            // 2NNN - CALL addr: Call subroutine at NNN
+            // TODO: Push PC to stack, then set PC to nnn
+            break;
+        }
+
+        case 0x3: {
+            // 3XNN - SE Vx, byte: Skip next instruction if Vx == NN
+            // TODO: if (V[x] == nn) PC += 2
+            break;
+        }
+
+        case 0x4: {
+            // 4XNN - SNE Vx, byte: Skip next instruction if Vx != NN
+            // TODO: if (V[x] != nn) PC += 2
+            break;
+        }
+
+        case 0x5: {
+            // 5XY0 - SE Vx, Vy: Skip next instruction if Vx == Vy
+            // TODO: if (V[x] == V[y]) PC += 2
+            break;
+        }
+
+        case 0x6: {
+            // 6XNN - LD Vx, byte: Set Vx = NN
+            v[results.x] = results.nn;
+            break;
+        }
+
+        case 0x7: {
+            // 7XNN - ADD Vx, byte: Set Vx = Vx + NN
+            v[results.x] += results.nn;
+            break;
+        }
+
+        case 0x8: {
+            // 8XY_ - Register operations
+            const uint8_t sub_op = results.instruction & 0x000F;
+            switch (sub_op) {
+                case 0x0: // 8XY0 - LD Vx, Vy
+                    // TODO: V[x] = V[y]
+                    break;
+                case 0x1: // 8XY1 - OR Vx, Vy
+                    // TODO: V[x] |= V[y]
+                    break;
+                case 0x2: // 8XY2 - AND Vx, Vy
+                    // TODO: V[x] &= V[y]
+                    break;
+                // TODO: Add other 8XY_ operations
+                default:
+                    // Unrecognized 8XY_ operation
+                    break;
+            }
+            break;
+        }
+
+        case 0x9: {
+            // 9XY0 - SNE Vx, Vy: Skip next instruction if Vx != Vy
+            // TODO: if (V[x] != V[y]) PC += 2
+            break;
+        }
+
+        case 0xA: {
+            // ANNN - LD I, addr: Set I = NNN
+            I = results.nnn;
+            break;
+        }
+
+        case 0xB: {
+            // BNNN - JP V0, addr: Jump to location NNN + V0
+            // TODO: PC = nnn + V[0]
+            break;
+        }
+
+        case 0xC: {
+            // CXNN - RND Vx, byte: Set Vx = random byte AND NN
+            // TODO: V[x] = (rand() & 0xFF) & nn
+            break;
+        }
+
+        case 0xD: {
+            // DXYN - DRW Vx, Vy, nibble: Display n-byte sprite at (Vx, Vy)
+            // TODO: Draw sprite implementation
+            break;
+        }
+
+        case 0xE: {
+            // Keyboard operations
+            if (results.nn == 0x9E) {
+                // EX9E - SKP Vx: Skip next instruction if key Vx is pressed
+                // TODO: if (key[V[x]]) PC += 2
+            } else if (results.nn == 0xA1) {
+                // EXA1 - SKNP Vx: Skip next instruction if key Vx is not pressed
+                // TODO: if (!key[V[x]]) PC += 2
+            }
+            break;
+        }
+
+        case 0xF: {
+            // Special operations
+            switch (results.nn) {
+                case 0x07: // FX07 - LD Vx, DT: Set Vx = delay timer
+                    // TODO: V[x] = delay_timer
+                    break;
+                case 0x0A: // FX0A - LD Vx, K: Wait for key press, store in Vx
+                    // TODO: Wait for key implementation
+                    break;
+                case 0x15: // FX15 - LD DT, Vx: Set delay timer = Vx
+                    // TODO: delay_timer = V[x]
+                    break;
+                case 0x18: // FX18 - LD ST, Vx: Set sound timer = Vx
+                    // TODO: sound_timer = V[x]
+                    break;
+                case 0x1E: // FX1E - ADD I, Vx: Set I = I + Vx
+                    // TODO: I += V[x]
+                    break;
+                case 0x29: // FX29 - LD F, Vx: Set I = location of sprite for digit Vx
+                    // TODO: I = font_base_address + V[x] * 5
+                    break;
+                case 0x33: // FX33 - LD B, Vx: Store BCD representation of Vx
+                    // TODO: BCD implementation
+                    break;
+                case 0x55: // FX55 - LD [I], Vx: Store registers V0-Vx at memory location I
+                    // TODO: Memory store implementation
+                    break;
+                case 0x65: // FX65 - LD Vx, [I]: Read registers V0-Vx from memory location I
+                    // TODO: Memory load implementation
+                    break;
+                default:
+                    // Unrecognized FX__ operation
+                    break;
+            }
+            break;
+        }
+
+        default: {
+            // Unrecognized opcode
+            // TODO: Handle unknown opcode error
+            break;
+        }
+    }
 }
 
 
 int main() {
     unsigned char memory[4096];
-    char V[16];
+    uint8_t V[16];
     char stack[4096];
     uint16_t pc;
+    uint16_t I;
 
 
-    char index_register_a;
-    char index_register_b;
 
     constexpr uint8_t fonts[] = {
         0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -75,7 +239,7 @@ int main() {
         for (int x = 0; x < 64; ++x) {
             // turn on every other pixel in a classic checker pattern
             bool on = ((x + y) % 2 == 0);
-            display.setPixel(x, y, on);
+            display.set_pixel(x, y, on);
         }
     }
 
@@ -114,7 +278,7 @@ int main() {
                     for (int x = 0; x < 64; ++x) {
                         // turn on every other pixel in a classic checker pattern
                         const bool on = ((x + y) % 2 == val);
-                        display.setPixel(x, y, on);
+                        display.set_pixel(x, y, on);
                     }
                 }
 

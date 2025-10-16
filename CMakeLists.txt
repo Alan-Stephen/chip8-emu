@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 4.0)https://www.youtube.com/shorts/zQrq9B4KlvA
 project(untitled LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
