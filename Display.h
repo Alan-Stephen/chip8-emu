@@ -29,7 +29,9 @@ public:
     void flip_pixel(int x, int y);
     void render() const;
     void clear();
-    void draw_sprite(uint8_t x, uint8_t y, const uint8_t memory[], uint8_t height, uint8_t i, uint8_t v[]);
+    bool get_pixel(int x, int y) const;
+    void toggle_pixel(int x, int y);
+    void draw_sprite(uint8_t x, uint8_t y, const uint8_t* sprite_data, uint8_t height, uint8_t v[]);
 };
 
 }// namespace chip8
