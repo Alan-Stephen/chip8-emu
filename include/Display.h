@@ -21,6 +21,13 @@ private:
     SDL_Renderer *renderer;
     bool display[DISPLAY_HEIGHT][DISPLAY_WIDTH] = {false};
 
+    SDL_AudioDeviceID audio_device;
+    double audio_phase;
+    bool sound_playing;
+
+    static void audioCallback(void* userdata, Uint8* stream, int len);
+    void generateAudioSamples(Uint8* stream, int len);
+
 public:
     Display();
     ~Display();
@@ -32,6 +39,7 @@ public:
     bool get_pixel(int x, int y) const;
     void toggle_pixel(int x, int y);
     void draw_sprite(uint8_t x, uint8_t y, const uint8_t* sprite_data, uint8_t height, uint8_t v[]);
+    void updateSound(bool playing);
 };
 
 }// namespace chip8

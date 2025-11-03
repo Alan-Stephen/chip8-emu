@@ -10,6 +10,8 @@ find_package(SDL2 REQUIRED CONFIG)
 
 add_executable(app
     src/main.cpp
+    src/Chip8.cpp
+    include/Chip8.h
     src/AddressRegister.cpp
     include/AddressRegister.h
     src/Input.cpp

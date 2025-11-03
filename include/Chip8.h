@@ -1,0 +1,66 @@
+//
+// Created by alan on 8/17/25.
+//
+
+#ifndef UNTITLED_CHIP8_H
+#define UNTITLED_CHIP8_H
+
+#include <cstdint>
+#include <string>
+#include "AddressRegister.h"
+#include "Display.h"
+#include "Input.h"
+
+namespace chip8 {
+
+class Chip8 {
+private:
+    static constexpr uint8_t FONTS[80] = {
+        0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+        0x20, 0x60, 0x20, 0x20, 0x70, // 1
+        0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+        0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+        0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+        0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+        0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+        0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+        0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+        0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+        0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+        0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+        0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+        0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+        0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+        0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+    };
+
+    uint8_t memory[4096];
+    uint8_t V[16];
+    uint16_t stack[16];
+    uint8_t sp;
+    uint8_t bp;
+    uint16_t pc;
+    AddressRegister I;
+    uint8_t delay_timer;
+    uint8_t sound_timer;
+
+    Display* display;
+    Input* input;
+
+    void execute(uint16_t instruction);
+
+public:
+    Chip8(Display* disp, Input* inp);
+    
+    void reset();
+    bool loadProgram(const std::string& filename);
+    uint16_t fetch();
+    void step();
+    void updateTimers();
+    bool isSoundPlaying() const;
+};
+
+} // namespace chip8
+
+#endif //UNTITLED_CHIP8_H
+
