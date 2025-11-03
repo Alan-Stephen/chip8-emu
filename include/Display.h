@@ -32,13 +32,13 @@ public:
     Display();
     ~Display();
 
-    void set_pixel(int x, int y, bool on);
-    void flip_pixel(int x, int y);
+    void setPixel(int x, int y, bool on);
+    void flipPixel(int x, int y);
     void render() const;
     void clear();
-    bool get_pixel(int x, int y) const;
-    void toggle_pixel(int x, int y);
-    void draw_sprite(uint8_t x, uint8_t y, const uint8_t* sprite_data, uint8_t height, uint8_t v[]);
+    bool getPixel(int x, int y) const;
+    void togglePixel(int x, int y);
+    void drawSprite(uint8_t x, uint8_t y, const uint8_t* sprite_data, uint8_t height, uint8_t v[]);
     void updateSound(bool playing);
 };
 

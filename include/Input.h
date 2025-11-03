@@ -16,7 +16,7 @@ public:
     void setKeyReleased(uint8_t key);
     bool isKeyPressed(uint8_t key) const;
     bool isKeyPressed() const;
-    uint8_t get_key() const;
+    uint8_t getKey() const;
 };
 
 } // namespace chip8

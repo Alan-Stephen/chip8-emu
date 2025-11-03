@@ -22,7 +22,7 @@ bool Input::isKeyPressed() const {
     return keys != 0;
 }
 
-uint8_t Input::get_key() const {
+uint8_t Input::getKey() const {
     for (uint8_t i = 0; i < 16; ++i) {
         if (keys & (1 << i)) {
             return i;

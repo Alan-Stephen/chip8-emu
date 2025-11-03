@@ -76,20 +76,20 @@ Display::~Display() {
     SDL_Quit();
 }
 
-void Display::set_pixel(int x, int y, bool on) {
+void Display::setPixel(int x, int y, bool on) {
     if (x >= 0 && x < DISPLAY_WIDTH && y >= 0 && y < DISPLAY_HEIGHT) {
         display[y][x] = on;
     }
 }
 
-bool Display::get_pixel(int x, int y) const {
+bool Display::getPixel(int x, int y) const {
     if (x >= 0 && x < DISPLAY_WIDTH && y >= 0 && y < DISPLAY_HEIGHT) {
         return display[y][x];
     }
     return false;
 }
 
-void Display::toggle_pixel(int x, int y) {
+void Display::togglePixel(int x, int y) {
      if (x >= 0 && x < DISPLAY_WIDTH && y >= 0 && y < DISPLAY_HEIGHT) {
         display[y][x] = !display[y][x];
     }
@@ -122,11 +122,11 @@ void Display::clear() {
     }
 }
 
-void Display::flip_pixel(int x, int y) {
-    toggle_pixel(x, y);
+void Display::flipPixel(int x, int y) {
+    togglePixel(x, y);
 }
 
-void Display::draw_sprite(uint8_t x, uint8_t y, const uint8_t* sprite_data, uint8_t height, uint8_t v[]) {
+void Display::drawSprite(uint8_t x, uint8_t y, const uint8_t* sprite_data, uint8_t height, uint8_t v[]) {
     uint8_t start_x = x % DISPLAY_WIDTH;
     uint8_t start_y = y % DISPLAY_HEIGHT;
 
@@ -144,10 +144,10 @@ void Display::draw_sprite(uint8_t x, uint8_t y, const uint8_t* sprite_data, uint
             if (current_x >= DISPLAY_WIDTH) continue;
 
             if ((sprite_byte & (0x80 >> bit)) != 0) {
-                if (get_pixel(current_x, current_y)) {
+                if (getPixel(current_x, current_y)) {
                     v[0xF] = 1;
                 }
-                toggle_pixel(current_x, current_y);
+                togglePixel(current_x, current_y);
             }
         }
     }

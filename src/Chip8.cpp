@@ -180,10 +180,10 @@ void Chip8::execute(uint16_t instruction) {
                     if (current_x >= 64) continue;
 
                     if ((sprite_byte & (0x80 >> bit)) != 0) {
-                        if (display->get_pixel(current_x, current_y)) {
+                        if (display->getPixel(current_x, current_y)) {
                             V[0xF] = 1;
                         }
-                        display->toggle_pixel(current_x, current_y);
+                        display->togglePixel(current_x, current_y);
                     }
                 }
             }
@@ -223,7 +223,7 @@ void Chip8::execute(uint16_t instruction) {
                          pc -= 2;
                          break;
                     }
-                    V[x] = input->get_key();
+                    V[x] = input->getKey();
                     break;
                     case 0x29:
                         I = 0x050 + (V[x] & 0x0F) * 5;
