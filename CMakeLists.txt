@@ -9,16 +9,18 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(SDL2 REQUIRED CONFIG)
 
 add_executable(app
-    main.cpp
-    AddressRegister.cpp
-    AddressRegister.h
-    Input.cpp
-    Input.h
-    Display.cpp
-    Display.h
-    Sprite.cpp
-    Sprite.h
+    src/main.cpp
+    src/AddressRegister.cpp
+    include/AddressRegister.h
+    src/Input.cpp
+    include/Input.h
+    src/Display.cpp
+    include/Display.h
+    src/Sprite.cpp
+    include/Sprite.h
 )
+
+target_include_directories(app PRIVATE include)
 
 target_link_libraries(app PRIVATE SDL2::SDL2)
 
